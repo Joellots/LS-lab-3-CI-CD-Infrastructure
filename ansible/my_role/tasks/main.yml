@@ -1,0 +1,23 @@
+---
+- name: Pull GitLab EE Docker image
+  docker_image:
+    name: gitlab/gitlab-ee:latest
+    source: pull
+
+- name: Create GitLab data directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  loop:
+    - /srv/gitlab/config
+    - /srv/gitlab/logs
+    - /srv/gitlab/data
+
+- name: Ensure Docker service is running
+  service:
+    name: docker
+    state: started
+    enabled: yes
